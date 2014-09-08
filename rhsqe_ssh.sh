@@ -6,54 +6,55 @@
     Email: holloway@redhat.com
     
     Purpose:    SSH Helper Functions
-                Functions to assist in running functions, scripts, and individual commands via ssh
+                Functions to assist in running simple scripts, functions, and individual commands via ssh
 
     NOTE:   Source this file prior to use.
             This script assumes ssh keys have already been setup on local/remote systems.
 _comment_
 
-# Change keypath from example below
-KEYPATH=~/.ssh/id_rsa_rhsqe
+# Change default user, key path, and options from examples below
+DEFAULT_USER=root
+DEFAULT_KEYPATH=~/.ssh/id_rsa_rhsqe
+DEFAULT_OPTIONS="-oPasswordAuthentication=no -oStrictHostKeyChecking=no"
+
+
+RHSQE_SSH_USER=${RHSQE_SSH_USER:=$DEFAULT_USER}
+RHSQE_SSH_KEYPATH=${RHSQE_SSH_KEYPATH:=$DEFAULT_KEYPATH}
+RHSQE_SSH_OPTIONS=${RHSQE_SSH_OPTIONS:=$DEFAULT_OPTIONS}
 
 
 function rhsqe_sshf()
 {
-    THEFUNCNAME=$1
-    THESERVERLIST=$2
+    local function_name=$1
+    local server_list=$2
 
-    #echo;echo ">>>>> RHSQE_SSHF: Running ${THEFUNCNAME} on ${THESERVERLIST}"
-
-    for the_server in $THESERVERLIST
+    for the_server in $server_list
     do
-        (declare -f ${THEFUNCNAME}; echo ${THEFUNCNAME}) | ssh -i ${KEYPATH} -oPasswordAuthentication=no -oStrictHostKeyChecking=no root@${the_server} 'bash -s'
+        (declare -f ${function_name}; echo ${function_name}) | ssh -i ${RHSQE_SSH_KEYPATH} ${RHSQE_SSH_OPTIONS} ${RHSQE_SSH_USER}@${the_server} 'bash -s'
     done 
 }
 
 
 function rhsqe_sshs()
 {
-    THESCRIPTNAME=$1
-    THESERVERLIST=$2
+    local script_name=$1
+    local server_list=$2
 
-    #echo;echo ">>>>> RHSQE_SSHS: Running ${THESCRIPTNAME} on ${THESERVERLIST}"
-
-    for the_server in $THESERVERLIST
+    for the_server in $server_list
     do
-         cat $THESCRIPTNAME | ssh -i ${KEYPATH} -oPasswordAuthentication=no -oStrictHostKeyChecking=no root@${the_server} 'bash -s'
+        cat $script_name | ssh -i ${RHSQE_SSH_KEYPATH} ${RHSQE_SSH_OPTIONS} ${RHSQE_SSH_USER}@${the_server} 'bash -s'
     done 
 }
 
 
 function rhsqe_sshc()
 {
-    THECOMMAND=$1
-    THESERVERLIST=$2
+    local command=$1
+    local server_list=$2
 
-    #echo;echo ">>>>> RHSQE_SSHC: Running ${THECOMMAND} on ${THESERVERLIST}"
-
-    for the_server in $THESERVERLIST
+    for the_server in $server_list
     do
-        ssh -i ${KEYPATH} -oPasswordAuthentication=no -oStrictHostKeyChecking=no root@${the_server} ${THECOMMAND}
+        ssh -i ${RHSQE_SSH_KEYPATH} ${RHSQE_SSH_OPTIONS} ${RHSQE_SSH_USER}@${the_server} ${command}
     done
 }
 
