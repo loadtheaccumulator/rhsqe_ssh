@@ -8,8 +8,13 @@
     Purpose:    SSH Helper Functions
                 Functions to assist in running functions, scripts, and individual commands via ssh
 
-    Note: Source this file prior to use.
+    NOTE:   Source this file prior to use.
+            This script assumes ssh keys have already been setup on local/remote systems.
 _comment_
+
+# Change keypath from example below
+KEYPATH=~/.ssh/id_rsa_rhsqe
+
 
 : <<'_comment_'
 
@@ -36,7 +41,7 @@ function rhsqe_sshf()
 
     for the_server in $THESERVERLIST
     do
-        (declare -f ${THEFUNCNAME}; echo ${THEFUNCNAME}) | ssh -i ~/.ssh/id_rsa_rhsqe -oPasswordAuthentication=no -oStrictHostKeyChecking=no root@${the_server} 'bash -s'
+        (declare -f ${THEFUNCNAME}; echo ${THEFUNCNAME}) | ssh -i ${KEYPATH} -oPasswordAuthentication=no -oStrictHostKeyChecking=no root@${the_server} 'bash -s'
     done 
 }
 
@@ -59,7 +64,7 @@ rhsqe_sshs()
 
     for the_server in $THESERVERLIST
     do
-         cat $THESCRIPTNAME | ssh -i ~/.ssh/id_rsa_rhsqe -oPasswordAuthentication=no -oStrictHostKeyChecking=no root@${the_server} 'bash -s'
+         cat $THESCRIPTNAME | ssh -i ${KEYPATH} -oPasswordAuthentication=no -oStrictHostKeyChecking=no root@${the_server} 'bash -s'
     done 
 }
 
@@ -82,6 +87,7 @@ rhsqe_sshc()
 
     for the_server in $THESERVERLIST
     do
-        ssh -i ~/.ssh/id_rsa_rhsqe -oPasswordAuthentication=no -oStrictHostKeyChecking=no root@${the_server} ${THECOMMAND}
+        ssh -i ${KEYPATH} -oPasswordAuthentication=no -oStrictHostKeyChecking=no root@${the_server} ${THECOMMAND}
     done
 }
+
