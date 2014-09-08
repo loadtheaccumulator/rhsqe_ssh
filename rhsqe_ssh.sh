@@ -16,22 +16,6 @@ _comment_
 KEYPATH=~/.ssh/id_rsa_rhsqe
 
 
-: <<'_comment_'
-
-   rhsqe_sshf - Executes a locally declared shell function on one or more remote systems
-
-    Usage: rhsqe_sshf "<function_name> [params]" "<list_of_hostnames>"
-    e.g., 
-        function getDirectoryList()
-        {
-            thedir=$1
-            ls $thedir
-        }
-
-        rhsqe_sshf "getDirectoryList /etc" "host1.example.com host2.example.com host3.example.com"
-
-_comment_
-
 function rhsqe_sshf()
 {
     THEFUNCNAME=$1
@@ -45,17 +29,8 @@ function rhsqe_sshf()
     done 
 }
 
-: <<'_comment_'
 
-    rhsqe_sshs - Executes a local shell script on one or more remote systems
-
-    Usage: rhsqe_sshs <script_name> "<list_of_hostnames>"
-    e.g., 
-        rhsqe_sshs getUname.sh "host1.example.com host2.example.com host3.example.com"
-
-_comment_
-
-rhsqe_sshs()
+function rhsqe_sshs()
 {
     THESCRIPTNAME=$1
     THESERVERLIST=$2
@@ -68,17 +43,8 @@ rhsqe_sshs()
     done 
 }
 
-: <<'_comment_'
 
-    rhsqe_sshc - Executes a command on one or more remote systems
-
-    Usage: rhsqe_sshc "<command>" "<list_of_hostnames>"
-    e.g., 
-        rhsqe_sshc "uname -a" "host1.example.com host2.example.com host3.example.com"
-
-_comment_
-
-rhsqe_sshc()
+function rhsqe_sshc()
 {
     THECOMMAND=$1
     THESERVERLIST=$2
